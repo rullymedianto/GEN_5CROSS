@@ -1,9 +1,9 @@
 tic
 % clear all
 % close all
-load('NavData_25.mat')
-load('NavAIP_25.mat')
-load('Label_25.mat')
+load('NavData_5cross.mat')
+load('NavAIP_5cross.mat')
+load('Label_5cross.mat')
 
 time= 3600; %
 temp1=5;
@@ -21,73 +21,21 @@ Time_Trigger = cell(1,time);
 Holding_status = cell(1,time);
 Sim2 = cell(1,time);
 
-%% Arrival
-%% RWY 25R
-
-%% RWY 25L
-
 sa1=jadwal(time);
 sa2=jadwal(time);
 sa3=jadwal(time);
-
-
-
-%sa1 = [1 200 840 1080 1800 2000 2720 3600 4000 4200 4400 4600 4800 5000 5200 5800 6000 6200 6600 6800 7000];
-%sa2 = [1 200 840 1560 1700 2100 2460 2560 2660 2860 3000 3200 3400 3500 3600 3800 4000 4500 4600 4800 4900 5000 5100 5200 5400 5600 5800 6000 6600 6800 7000];
-%sa3 = [1 200 1560 2100 2560 2860 3400 3800 4000 4400 4500 4600 4800 4900 5000 5100 5200 5400 5600 5800 6000 6200 6400 6600 6800 7000];
-
-% sa1 = [1 240 480 720 960 1200 1440 1920 2160 2400 2640 2880 3120 3360 3840 4080 4320 4560 4800 5280 5520 5760 6240 6480 6720 6960 7200];
-% sa2 = [40 240 480 720 960 1200 1440 1920 2160 2400 2640 2880 3120 3360 3840 4080 4320 4560 4800 5280 5520 5760 6240 6480 6720 6960 7200];
-% sa3 = [1 240 480 720 960 1200 1440 1920 2160 2400 2640 2880 3120 3360 3840 4080 4320 4560 4800 5280 5520 5760 6240 6480 6720 6960 7200];
-
-%% Schedule Departure %%
-%Runway 25R
-
-sa4 = [1];%[1 120 240 360 1000 1200 1500 2000];% 5300];
-sa5 = [200];%[500 2000];% 5600 7000]
-
-% sa4 = [1 120 240 360 1000 1200 1500 2000 3800 4200 4500 4800 6400 6800 7000];% 5300];
-% sa5 = [500 2000 2500 2800 3200 3500 5100 5400 5700 6000 ];% 5600 7000];
-
-% 
-% %Runway 25L
-% sa6=[0];
-% % sa6 = [50 600 1000 1300 1600];
-% 
-% % sa6 = [50 600 1000 1300 1600 2200 2500 3000 3400 3800 4200 4500 4800 5100 5400 5700 6000 6400 6800 7000];% 5000]; % DOLTA 2D
-% 
-% sa7 = [0];%[700];% 
-% sa8 = [0];%[900];%
-% sa9 = [0];%[1100];% 
-% sa10 = [0];%[1200];% 
-
-% %Runway 25L
-% sa11 = [0];%[50 200 400 600];%
-% sa12 = [0];%[800 1000];%
-% sa13 = [0];%[1200];% 
-
-%jadwal = cell(1,temp1)
-% jadwal = {sa1 sa2 sa3};
+sa4 = jadwal(time);
+sa5 = jadwal(time);
 
 [m1,n1]= size(sa1);
 [m2,n2]= size(sa2);
 [m3,n3]= size(sa3);
 [m4,n4]= size(sa4);
 [m5,n5]= size(sa5);
-% [m6,n6]= size(sa6);
-% [m7,n7]= size(sa7);
-% [m8,n8]= size(sa8);
-% [m9,n9]= size(sa9);
-% [m10,n10]= size(sa10);
-% % [m11,n11]= size(sa11);
-% [m12,n12]= size(sa12);
-% [m13,n13]= size(sa13);
 
-
-airplane_input = [n1 n2 n3 n4 n5]; % n6 n7 n8 n9 n10]% n11 n12 n13];
+airplane_input = [n1 n2 n3 n4 n5];
 
 airplane = sum(airplane_input);
-
 
 Jumlah_AC = airplane
 sched=zeros(time,airplane);
@@ -161,86 +109,6 @@ for i = 1:time
     typeac(1,takum(1,4)+k)= aircraft_type();
     end
 end
-
-% for i = 1:time
-%     for k = 1:n6
-%     if i == sa6(1,k)
-%         sched(i,takum(1,5)+k) = 1;
-%     end
-%     ruteno(i,takum(1,5)+k) = 6;
-%     typeac(i,takum(1,5)+k)= aircraft_type();
-%     end
-% end
-% 
-% for i = 1:time
-%     for k = 1:n7
-%     if i == sa7(1,k)
-%         sched(i,takum(1,6)+k) = 1;
-%     end
-%     ruteno(i,takum(1,6)+k) = 7;
-%     typeac(i,takum(1,6)+k)= aircraft_type();
-%     end
-% end
-% 
-% for i = 1:time
-%     for k = 1:n8
-%     if i == sa8(1,k)
-%         sched(i,takum(1,7)+k) = 1;
-%     end
-%     ruteno(i,takum(1,7)+k) = 8;
-%     typeac(i,takum(1,7)+k)= aircraft_type();
-%     end
-% end
-% 
-% for i = 1:time
-%     for k = 1:n9
-%     if i == sa9(1,k)
-%         sched(i,takum(1,8)+k) = 1;
-%     end
-%     ruteno(i,takum(1,8)+k) = 9;
-%     typeac(i,takum(1,8)+k)= aircraft_type();
-%     end
-% end
-% 
-% for i = 1:time
-%     for k = 1:n10
-%     if i == sa10(1,k)
-%         sched(i,takum(1,9)+k) = 1;
-%     end
-%     ruteno(i,takum(1,9)+k) = 10;
-%     typeac(i,takum(1,9)+k)= aircraft_type();
-%     end
-% end
-
-% for i = 1:time
-%     for k = 1:n11
-%     if i == sa11(1,k)
-%         sched(i,takum(1,10)+k) = 1;
-%     end
-%     ruteno(i,takum(1,10)+k) = 11;
-%     typeac(i,takum(1,10)+k)= aircraft_type();
-%     end
-% end
-% 
-% for i = 1:time
-%     for k = 1:n12
-%     if i == sa12(1,k)
-%         sched(i,takum(1,11)+k) = 1;
-%     end
-%     ruteno(i,takum(1,11)+k) = 12;
-%     typeac(i,takum(1,11)+k)= aircraft_type();
-%     end
-% end
-% 
-% for i = 1:time
-%     for k = 1:n13
-%     if i == sa13(1,k)
-%         sched(i,takum(1,12)+k) = 1;
-%     end
-%     ruteno(i,takum(1,12)+k) = 13;
-%     typeac(i,takum(1,12)+k)= aircraft_type();
-%     end
-% end
 
 % %% Airplane Route
 for i = 1:airplane
