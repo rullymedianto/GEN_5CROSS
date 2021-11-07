@@ -41,8 +41,8 @@ hold on;
 %           plotwaypoint2 = scatter(NavData(:,1),NavData(:,2),5,'filled','b'); %All WP
 %           txt2a = text(NavData(:,1),NavData(:,2),label,'FontSize',5,'HorizontalAlignment','right');
 %          
-          plotwaypoint2 = scatter(NavData(1:59,1),NavData(1:59,2),5,'filled','b'); %Arr WP
-          txt2a = text(NavData(1:59,1),NavData(1:59,2),label(1:59,1),'FontSize',5,'HorizontalAlignment','right');
+          plotwaypoint2 = scatter(NavData(1:12,1),NavData(1:12,2),5,'filled','b'); %Arr WP
+          txt2a = text(NavData(1:12,1),NavData(1:12,2),label(1:12,1),'FontSize',5,'HorizontalAlignment','right');
           
          
 %           plotwaypoint2 = scatter(NavData(35:82,1),NavData(35:82,2),5,'filled','b'); %Dep WP
@@ -57,7 +57,7 @@ hold on;
             simulationplot2 = scatter(Sim1{1,i}(2,:), Sim1{1,i}(3,:),20,Conflict_2{1,i}(:,:),'filled');
 %           simulationplot2 = scatter(Sim1{1,i}(2,:), Sim1{1,i}(3,:),20,'filled');
 %              aa = round(mps2kt(Sim1{1,i}(19,:)')); 
-             aa = round(mps2kt(Sim1{1,i}(19,:)'));
+             aa = round(mps2kt(Sim1{1,i}(1,:)'));
              bb = num2str(aa); cc = cellstr(bb);
         
              aa1 = round(mtr2ft(Sim1{1,i}(4,:)')); 
@@ -126,12 +126,12 @@ hold on;
         delete (txt2b);
 %         delete(plotseparation);
 %         delete(plotcapacity);
-R= nm(75);
-gambar_lingkaran_75=circleplot(-29127.2,-71619.2,R);
-R1= nm(10);
-gambar_lingkaran_10=circleplot(-29127.2,-71619.2,R1);
-
-scatter(-76291.1000000000, 23571.4000000000);
+% R= nm(75);
+% gambar_lingkaran_75=circleplot(-29127.2,-71619.2,R);
+% R1= nm(10);
+% gambar_lingkaran_10=circleplot(-29127.2,-71619.2,R1);
+% 
+% scatter(-76291.1000000000, 23571.4000000000);
               end
           end
          

@@ -1,6 +1,6 @@
  %profile on 
 tic
-numb = 50 ;
+numb = 1 ;
 
 compl1 = cell(numb,10);
 compl2 = cell(numb,7);
@@ -13,7 +13,7 @@ tugas1 = cell(numb,7);
 n=0;
 for ii=1:numb
     schedules_ok
-    Simulation_LN_Janic %Simulation
+    Simulation_GEN_5cross %Simulation
 % for iii=1:10    
 %     Vector_Complexity
 %     No_conflict_plot% Calculate Complexity

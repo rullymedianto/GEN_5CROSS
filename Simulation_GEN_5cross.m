@@ -42,7 +42,7 @@ Conflict = cell(1,time);
 Conflict_0 = cell(1,time);
 Conflict_1 = cell(1,time);
 Conflict_2 = cell(1,time);
-Conflict_4 = cell(1,time);
+Conflict_3 = cell(1,time);
 
 
 ROW = cell(1,time);
@@ -119,13 +119,13 @@ for i = 1:time
                 end
                 
                 if Distance_Merg{1,i}(c1,c2) < buffer_zone_1 %&& Distance_Merg{1,i}(c1,c2) ~= 0
-                    Conflict_4{1,i}(c1,c2) = 1;
+                    Conflict_3{1,i}(c1,c2) = 1;
                     
                 elseif Distance_Merg{1,i}(c1,c2) == 0
-                    Conflict_4{1,i}(c1,c2) = 0;
+                    Conflict_3{1,i}(c1,c2) = 0;
                   
                 else
-                    Conflict_4{1,i}(c1,c2) = 0;
+                    Conflict_3{1,i}(c1,c2) = 0;
                     
                 end
 %% Conflict Definition              
@@ -278,7 +278,7 @@ end
 if Sim1{1,i}(19,j)==0
     Sim1{1,i+1}(9,j) = 1;
 else
-[Sim1{1,i+1}(9,j), Sim1{1,i+1}(31,j)]= clearance(ROW_Detail{1,i},Conflict_1{1,i},airplane,j,Distance_XY{1,i},buffer_zone_1,buffer_zone_2,Sim1{1,i+1}(4,j),Holding_status{1,i}(1,j),Conflict_4{1,i},Distance_Merg{1,i});
+[Sim1{1,i+1}(9,j), Sim1{1,i+1}(31,j)]= clearance(ROW_Detail{1,i},Conflict_1{1,i},airplane,j,Distance_XY{1,i},buffer_zone_1,buffer_zone_2,Sim1{1,i+1}(4,j),Holding_status{1,i}(1,j),Conflict_3{1,i},Distance_Merg{1,i});
         % 0 : No clearance
         % 1 : Clearance
 end
