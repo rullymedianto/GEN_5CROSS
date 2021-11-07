@@ -1,9 +1,9 @@
 tic
 % clear all
 % close all
-load('NavData_25.mat')
-load('NavAIP_25.mat')
-load('Label_25.mat')
+load('NavData_5cross.mat')
+load('NavAIP_5cross.mat')
+load('Label_5cross.mat')
 
 time= 3600; %
 temp1=5;

@@ -1,10 +1,10 @@
 function[sa]=jadwal(time)
-N = randi([50 70]);
+N = randi([5 40]);
 %sa = zeros(1,N);
-k=randi([1 60]);    
+k=randi([1 30]);    
 
 for iii=1:N
-    k=k+(60*(randi([1 4])));
+    k=k+(60*(randi([2 4])));
     sa(1,iii)=k;
     if k>time
         return

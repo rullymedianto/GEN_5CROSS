@@ -1,6 +1,6 @@
  %profile on 
 tic
-numb = 1 ;
+numb = 10 ;
 
 compl1 = cell(numb,10);
 compl2 = cell(numb,7);
@@ -59,10 +59,7 @@ tugas1{ii,4}=mean_time; %waktu selama di sektor dalam menit
 tugas1{ii,5}= conflict_prop1; %conflict proportion by time
 tugas1{ii,6}= conflict_prop2; %Average conflict proportion  
 
-
 compl_total=[tugas1 compl1 compl2 compl3 compl4 compl5];
-
-
 
 %save('Complexity_Total.mat','compl_total','-v7.3')
 % writecell(compl_total,'7200-4min_00-00-100_2-3bde.xls')

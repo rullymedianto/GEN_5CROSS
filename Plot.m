@@ -54,7 +54,7 @@ hold on;
               title("2D Graph (t = " + i + ")")
         
               if Sim1{1,i}(4,:) > 75       
-            simulationplot2 = scatter(Sim1{1,i}(2,:), Sim1{1,i}(3,:),20,Conflict_2{1,i}(:,:),'filled');
+            simulationplot2 = scatter(Sim1{1,i}(2,:), Sim1{1,i}(3,:))%,20,Conflict_2{1,i}(:,:),'filled');
 %           simulationplot2 = scatter(Sim1{1,i}(2,:), Sim1{1,i}(3,:),20,'filled');
 %              aa = round(mps2kt(Sim1{1,i}(19,:)')); 
              aa = round(mps2kt(Sim1{1,i}(1,:)'));

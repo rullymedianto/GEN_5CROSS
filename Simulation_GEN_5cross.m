@@ -217,8 +217,8 @@ for i = 1:time
 Separation_Minimum(1,i) = min(min(Distance_XY_Plot{1,i}(:,:)));
 
 % %Capacity
-CapacityArray{1,1}(1,1) = 0;
-CapacityArray{1,1}(1,i+1) = capacity(Sim1{1,i},airplane);
+% CapacityArray{1,1}(1,1) = 0;
+% CapacityArray{1,1}(1,i+1) = capacity(Sim1{1,i},airplane);
 
 for j = 1:airplane
 %for k = 1:LD
@@ -668,6 +668,7 @@ end
    %COMCTR{1,i+1}(1,j)= 0;
     else
         COMCTR{1,i+1}(1,j)= 1;
+        COMCTR{1,i+1}(5,j)= 1;
     end
     
 elseif COMCTR{1,i+1}(2,j)== 1 
@@ -677,6 +678,7 @@ elseif COMCTR{1,i+1}(2,j)== 1
     %COMCTR{1,i+1}(2,j)= 0;
     else
         COMCTR{1,i+1}(2,j)= 1;
+        COMCTR{1,i+1}(5,j)= 1;
     end
           
 elseif COMCTR{1,i+1}(3,j)== 1 
@@ -689,6 +691,7 @@ elseif COMCTR{1,i+1}(3,j)== 1
     %COMCTR{1,i+1}(3,j)= 0;
     else
         COMCTR{1,i+1}(3,j)= 1 ;
+        COMCTR{1,i+1}(5,j)= 1;
     end
     
 elseif COMCTR{1,i+1}(4,j)== 1 
@@ -701,117 +704,21 @@ elseif COMCTR{1,i+1}(4,j)== 1
     %COMCTR{1,i+1}(4,j)= 0;
     else
         COMCTR{1,i+1}(4,j)= 1 ;
+        COMCTR{1,i+1}(5,j)= 1;
     end
     
-%     
-% elseif COMCTR{1,i}(1,j)== 1 && COMCTR{1,i}(5,j)== 1
-%    tcom1 = tcom1 + tcin; %time comm in
-%    COMCTR{1,i+1}(5,j)= 1;
-%     
-% elseif COMCTR{1,i}(2,j)== 1 &&  COMCTR{1,i}(5,j)== 1
-%     tcom1 = tcom1 + tcout; %time comm out
-%     COMCTR{1,i+1}(5,j)= 1;
-%  
-% elseif COMCTR{1,i}(3,j)== 1 &&  COMCTR{1,i}(5,j)== 1
-%     tcom1 = tcom1 + tcvec; %time vectoring
-%     COMCTR{1,i+1}(5,j)= 1;
-% 
-% elseif COMCTR{1,i}(4,j)== 1 &&  COMCTR{1,i}(5,j)== 1
-%     tcom1 = tcom1 + tccon; %time resolution conflict
-%     COMCTR{1,i+1}(5,j)= 1;
     
 elseif COMCTR{1,i}(5,j)== 1 && tcom1>0 
     tcom1 = tcom1-1;
     COMCTR{1,i+1}(5,j)= 1;
- else
-     COMCTR{1,i+1}(5,j)= 0;
+else
+    COMCTR{1,i+1}(5,j)= 0;
 end
 
 
 COMCTR1(1,i+1)= any(COMCTR{1,i+1}(5,:)+ con_prop{1,i+1}(1,:));
 COMCTR1(2,i+1)= any(COMCTR{1,i+1}(1,:)+COMCTR{1,i+1}(2,:)+COMCTR{1,i+1}(3,:)+COMCTR{1,i+1}(4,:)+ con_prop{1,i+1}(1,:));
 
-%% Monitoring Workload
-% if (Sim1{1,i}(29,j)== 0 && Sim1{1,i+1}(29,j)== 1) 
-%    MONWL{1,i+1}(1,j)= 1; % Enter sector  Check
-% else
-%    MONWL{1,i+1}(1,j)= 0;
-% end
-% 
-% if (Sim1{1,i}(29,j)== 1 && Sim1{1,i+1}(29,j)== 0) 
-%    COMCTR{1,i+1}(2,j)= 1; % Exit sector  Check
-% else
-%    COMCTR{1,i+1}(2,j)= 0;
-% end
-%  
-% if (Sim1{1,i}(9,j)== 1 && Sim1{1,i+1}(9,j)== 0 && Sim1{1,i+1}(29,j)== 1 && Sim1{1,i+1}(10,j) == 2) || (Sim1{1,i}(10,j)== 2 && Sim1{1,i+1}(29,j)== 1 && Sim1{1,i+1}(10,j) == 0)
-%    COMCTR{1,i+1}(3,j)= 1; % Radar vector
-% else
-%    COMCTR{1,i+1}(3,j)= 0;
-% end
-% 
-% if Sim1{1,i}(9,j)== 1 && Sim1{1,i+1}(9,j)== 0 && Sim1{1,i+1}(29,j)== 1 && Sim1{1,i+1}(10,j)~= 2 && Sim1{1,i+1}(10,j)~= 0
-%    COMCTR{1,i+1}(4,j)= 1; % Control conflict
-% else
-%    COMCTR{1,i+1}(4,j)= 0;
-% end
-% 
-%  
-% tcin = 16;% Communication time for coordination in sec
-% tcout = 14; % Communication time for coordination out sector
-% tcid = 12; % Communication time for radar identification 
-% tcvec = 16; % Communication time for radar vectoring 
-% tccon = 15; % Communication time for control conflict
-% 
-% if i==1
-%     tcom1=0;
-% end
-
-
- %% Communication Time Lower North%%% 
- 
-% if COMCTR{1,i}(1,j)== 1 && COMCTR{1,i}(5,j)== 0
-%    tcom1 = tcin; %time comm in
-%    COMCTR{1,i+1}(5,j)= 1;
-%     
-% elseif COMCTR{1,i}(2,j)== 1 &&  COMCTR{1,i}(5,j)== 0
-%     tcom1 = tcout; %time comm out
-%     COMCTR{1,i+1}(5,j)= 1;
-%  
-% elseif COMCTR{1,i}(3,j)== 1 &&  COMCTR{1,i}(5,j)== 0
-%     tcom1 = tcvec; %time vectoring
-%     COMCTR{1,i+1}(5,j)= 1;
-% 
-% elseif COMCTR{1,i}(4,j)== 1 &&  COMCTR{1,i}(5,j)== 0
-%     tcom1 = tccon; %time resolution conflict
-%     COMCTR{1,i+1}(5,j)= 1;
-%     
-% elseif COMCTR{1,i}(1,j)== 1 && COMCTR{1,i}(5,j)== 1
-%    tcom1 = tcom1 + tcin; %time comm in
-%    COMCTR{1,i+1}(5,j)= 1;
-%     
-% elseif COMCTR{1,i}(2,j)== 1 &&  COMCTR{1,i}(5,j)== 1
-%     tcom1 = tcom1 + tcout; %time comm out
-%     COMCTR{1,i+1}(5,j)= 1;
-%  
-% elseif COMCTR{1,i}(3,j)== 1 &&  COMCTR{1,i}(5,j)== 1
-%     tcom1 = tcom1 + tcvec; %time vectoring
-%     COMCTR{1,i+1}(5,j)= 1;
-% 
-% elseif COMCTR{1,i}(4,j)== 1 &&  COMCTR{1,i}(5,j)== 1
-%     tcom1 = tcom1 + tccon; %time resolution conflict
-%     COMCTR{1,i+1}(5,j)= 1;
-%     
-% elseif COMCTR{1,i}(5,j)== 1 && tcom1>0 
-%     tcom1 = tcom1-1;
-%     COMCTR{1,i+1}(5,j)= 1;
-%  else
-%      COMCTR{1,i+1}(5,j)= 0;
-% end
-
-
-% COMCTR1(1,i+1)= any(COMCTR{1,i+1}(5,:));
-% COMCTR1(2,i+1)= any(COMCTR{1,i+1}(1,:)+COMCTR{1,i+1}(2,:)+COMCTR{1,i+1}(3,:)+COMCTR{1,i+1}(4,:)+con_prop{1,i+1}(1,:));
 
 %% Complexity Weighting Factor
 
