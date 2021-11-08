@@ -80,53 +80,32 @@ for i = 1:time
                 if c1 == c2 || Sim1{1,i}(4,c1) >= 9000000 || Sim1{1,i}(4,c2) >= 9000000
                     Distance_XY{1,i}(c1,c2) = 0;
                     Distance_Altitude{1,i}(c1,c2) = 0;
+                    Distance_Merg{1,i}(c1,c2) = 0;
                 else
                     Distance_XY{1,i}(c1,c2) = sqrt((Sim1{1,i}(2,c1) - Sim1{1,i}(2,c2)).^2 + (Sim1{1,i}(3,c1) - Sim1{1,i}(3,c2)).^2);
                     Distance_Altitude{1,i}(c1,c2) = sqrt((Sim1{1,i}(4,c1) - Sim1{1,i}(4,c2)).^2); %% Vertical distance
+                        if Sim1{1,i}(27,c1)~= Sim1{1,i}(27,c2)
+                            Distance_Merg{1,i}(c1,c2) = abs(sqrt(Sim1{1,i}(2,c1).^2 + Sim1{1,i}(3,c1).^2) - sqrt(Sim1{1,i}(2,c2).^2 + Sim1{1,i}(3,c2).^2));
+                        else
+                            Distance_Merg{1,i}(c1,c2) = 0;
+                        end
                 end
-                
-% %  Potential Conflict on merging point               
-                if c1 == c2 || Sim1{1,i}(4,c1) >= 9000000 || Sim1{1,i}(4,c2) >= 9000000
-                    Distance_Merg{1,i}(c1,c2) = 0;
-                    
-%                 elseif (Sim1{1,i}(1,c1) == 2 || Sim1{1,i}(1,c1) == 3) && (Sim1{1,i}(1,c2) == 2 || Sim1{1,i}(1,c2) == 3) && (Sim1{1,i}(27,c2) == 1 || Sim1{1,i}(27,c2) == 2 || Sim1{1,i}(27,c2) == 3) && (Sim1{1,i}(27,c1) == 1 || Sim1{1,i}(27,c1) == 2 || Sim1{1,i}(27,c1) == 3)
-%                     Distance_Merg{1,i}(c1,c2) = abs(sqrt(Sim1{1,i}(2,c1).^2 + Sim1{1,i}(3,c1).^2) - sqrt(Sim1{1,i}(2,c2).^2 + Sim1{1,i}(3,c2).^2));
-%                 elseif Sim1{1,i}(1,c1) == 2  && Sim1{1,i}(1,c2) == 2 && (Sim1{1,i}(27,c2) == 14 || Sim1{1,i}(27,c2) == 15 || Sim1{1,i}(27,c2) == 16) && (Sim1{1,i}(27,c1) == 14 || Sim1{1,i}(27,c1) == 15 || Sim1{1,i}(27,c1) == 16)
-%                     Distance_Merg{1,i}(c1,c2) = abs(sqrt(Sim1{1,i}(2,c1).^2 + Sim1{1,i}(3,c1).^2) - sqrt(Sim1{1,i}(2,c2).^2 + Sim1{1,i}(3,c2).^2));
-                elseif Sim1{1,i}(27,c1)~= Sim1{1,i}(27,c2)
-                Distance_Merg{1,i}(c1,c2) = abs(sqrt(Sim1{1,i}(2,c1).^2 + Sim1{1,i}(3,c1).^2) - sqrt(Sim1{1,i}(2,c2).^2 + Sim1{1,i}(3,c2).^2));
-                else
-                    Distance_Merg{1,i}(c1,c2) = 0;
-                end
-                 
+
  %% For Radius 10NM-75NM
  
  if Sim1{1,i}(4,c1)> meter(2000) && Sim1{1,i}(4,c1)< 500000   
-                %Aircraft-Aircraft Distance-Altitude
-%                 if c1 == c2
-%                     Distance_Altitude{1,i}(c1,c2) = 0;
-%                 else
-%                     Distance_Altitude{1,i}(c1,c2) = sqrt((Sim1{1,i}(4,c1) - Sim1{1,i}(4,c2)).^2);
-%                 end
-%                 
+
  %% Potential Conflict Definition              
                 if Distance_XY{1,i}(c1,c2) < buffer_zone_1 && Distance_XY{1,i}(c1,c2) ~= 0 && Distance_Altitude{1,i}(c1,c2) <= meter(2000)
                     Conflict{1,i}(c1,c2) = 1;
-                elseif Distance_XY{1,i}(c1,c2) == 0
-                    Conflict{1,i}(c1,c2) = 0;
                 else
                     Conflict{1,i}(c1,c2) = 0;
                 end
                 
-                if Distance_Merg{1,i}(c1,c2) < buffer_zone_1 %&& Distance_Merg{1,i}(c1,c2) ~= 0
+                if Distance_Merg{1,i}(c1,c2) < buffer_zone_1 && Distance_Merg{1,i}(c1,c2) ~= 0
                     Conflict_3{1,i}(c1,c2) = 1;
-                    
-                elseif Distance_Merg{1,i}(c1,c2) == 0
-                    Conflict_3{1,i}(c1,c2) = 0;
-                  
                 else
                     Conflict_3{1,i}(c1,c2) = 0;
-                    
                 end
 %% Conflict Definition              
                 if Distance_XY{1,i}(c1,c2) < conflict_separation_1  && Distance_XY{1,i}(c1,c2) ~= 0 && Distance_Altitude{1,i}(c1,c2) <= meter(1000)
@@ -139,27 +118,22 @@ for i = 1:time
          
        %% For Radius 10NM
        else 
-                %Aircraft-Aircraft Distance-Altitude
-                if c1 == c2
-                    Distance_Altitude{1,i}(c1,c2) = 0;
-                else
-                    Distance_Altitude{1,i}(c1,c2) = sqrt((Sim1{1,i}(4,c1) - Sim1{1,i}(4,c2)).^2);
-                end
-                
                 %Potential Conflict Definition              
                 if Distance_XY{1,i}(c1,c2) < buffer_zone_2 && Distance_XY{1,i}(c1,c2) ~= 0 && Distance_Altitude{1,i}(c1,c2) <= meter(2000)
                     Conflict{1,i}(c1,c2) = 1;
-                elseif Distance_XY{1,i}(c1,c2) == 0
-                    Conflict{1,i}(c1,c2) = 0;
                 else
                     Conflict{1,i}(c1,c2) = 0;
+                end
+                
+               if Distance_Merg{1,i}(c1,c2) < buffer_zone_2 && Distance_Merg{1,i}(c1,c2) ~= 0
+                    Conflict_3{1,i}(c1,c2) = 1;
+                else
+                    Conflict_3{1,i}(c1,c2) = 0;
                 end
                 
 % % Conflict Definition              
                 if Distance_XY{1,i}(c1,c2) < conflict_separation_2  && Distance_XY{1,i}(c1,c2) ~= 0 && Distance_Altitude{1,i}(c1,c2) <= meter(1000)
                     Conflict_0{1,i}(c1,c2) = 1;
-                elseif Distance_XY{1,i}(c1,c2) == 0
-                    Conflict_0{1,i}(c1,c2) = 0;
                 else
                     Conflict_0{1,i}(c1,c2) = 0;
                 end

@@ -1,6 +1,6 @@
  %profile on 
 tic
-numb = 10 ;
+numb = 1000 ;
 
 compl1 = cell(numb,10);
 compl2 = cell(numb,7);
