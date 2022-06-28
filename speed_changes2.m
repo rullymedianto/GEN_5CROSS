@@ -1,4 +1,4 @@
-function [vx vy] = speed_changes2(vz,vplus,vnol,heading,ROW)
+function [vx,vy] = speed_changes2(vz,vplus,vnol,heading,ROW)
 %% Calculate Vy  
     
 
@@ -34,6 +34,6 @@ end
 % end
 end
 
-vy = sqrt(vnol^2 - vz^2)*cosd(heading);
-vx = sqrt(vnol^2 - vz^2)*sind(heading);
+vy = sqrt(abs(vnol^2 - vz^2))*cosd(heading);
+vx = sqrt(abs(vnol^2 - vz^2))*sind(heading);
 end

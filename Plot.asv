@@ -57,7 +57,7 @@ hold on;
             simulationplot2 = scatter(Sim1{1,i}(2,:), Sim1{1,i}(3,:));%,20,Conflict_2{1,i}(:,:),'filled');
 %           simulationplot2 = scatter(Sim1{1,i}(2,:), Sim1{1,i}(3,:),20,'filled');
 %              aa = round(mps2kt(Sim1{1,i}(19,:)')); 
-             aa = round(Sim1{1,i}(1,:)');
+             aa = round(mps2kt(Sim1{1,i}(1,:)'));
              bb = num2str(aa); cc = cellstr(bb);
         
             % aa1 = round(mtr2ft(Sim1{1,i}(4,:)')); 
@@ -68,12 +68,12 @@ hold on;
              bb2 = num2str(aa2); cc2 = cellstr(bb2);
              
              %dd = 'leftarrow'
-             dx1 = 1000; dy1 = 2000; % displacement so the text does not overlay the data points
-             dx2 = 2000; dy2 = -1500;
-             dx3 = 500; dy3 = 1500;
+             dx1 = 0.1; dy1 = 0.1; % displacement so the text does not overlay the data points
+             dx2 = 0.1; dy2 = -1500;
+             dx3 = 0.1; dy3 = 1500;
 
         %if aa < 100
-            txt2 = text(Sim1{1,i}(2,:)+dx1, Sim1{1,i}(3,:)+dy1, cc,'color','red','FontSize',7);
+            %txt2 = text(Sim1{1,i}(2,:)+dx1, Sim1{1,i}(3,:)+dy1, cc,'color','red','FontSize',7);
             txt2a = text(Sim1{1,i}(2,:)+dx2, Sim1{1,i}(3,:)+dy2, cc1,'color','red','FontSize',7);
             %txt2b = text(Sim1{1,i}(2,:)+dx3, Sim1{1,i}(3,:)+dy3, cc2,'color','blue','FontSize',7);
             %txt2a = text(NavData(:,1)+dx1,NavData(:,2)+dy1,label,'color','green','FontSize',7);

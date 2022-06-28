@@ -5,8 +5,8 @@ load('NavData_8jajar.mat')
 load('NavAIP_8jajar.mat')
 load('Label_8jajar.mat')
 
-time= 3000; %
-temp1=5;
+time= 3600; %
+temp1=6;
 lat_RADAR = -25118.4; %Koordinat X RADAR
 lon_RADAR = -71138.2; %Koordinat Y RADAR
 Vw = 6;   % Besar kecepatan angin
@@ -30,14 +30,14 @@ Sim2 = cell(1,time);
 % sa2=[1 200 ];
 % sa3=[1 200];
 % sa4=[1 200];
-sa1=jadwal2(time);
-sa2=jadwal2(time);
+% sa1=jadwal1(time);
+sa2=jadwal(time);
 sa3=jadwal2(time);
 sa4=jadwal2(time);
-sa5=jadwal1(time);
-% sa6=jadwal2(time);
-% sa7=jadwal(time);
-% sa8=jadwal2(time);
+sa5=jadwal2(time);
+% sa6=jadwal1(time);
+sa7=jadwal2(time);
+sa8=jadwal2(time);
 
 % sa1=[1 100];
 % sa2=[20 200];
@@ -83,14 +83,14 @@ sa5=jadwal1(time);
 %jadwal = cell(1,temp1)
 % jadwal = {sa1 sa2 sa3};
 
-[m1,n1]= size(sa1);
+% [m1,n1]= size(sa1);
 [m2,n2]= size(sa2);
 [m3,n3]= size(sa3);
 [m4,n4]= size(sa4);
 [m5,n5]= size(sa5);
 % [m6,n6]= size(sa6);
-% [m7,n7]= size(sa7);
-% [m8,n8]= size(sa8);
+[m7,n7]= size(sa7);
+[m8,n8]= size(sa8);
 % [m9,n9]= size(sa9);
 % [m10,n10]= size(sa10);
 % % [m11,n11]= size(sa11);
@@ -98,7 +98,7 @@ sa5=jadwal1(time);
 % [m13,n13]= size(sa13);
 
 
-airplane_input = [n1 n2 n3 n4 n5]; % n6 n7 n8 n9 n10]% n11 n12 n13];
+airplane_input = [n2 n3 n4 n5 n7 n8]; % n6 n7 n8 n9 n10]% n11 n12 n13];
 
 airplane = sum(airplane_input);
 
@@ -125,16 +125,16 @@ for h=1:temp1
     end
 end
 % 
-for i = 1:time
-    for k = 1:n1
-    if i == sa1(1,k)
-        sched(i,k) = 1;
-        % sched(i,takum(1,1)+k) = 1;
-    end
-    ruteno(1,k) = 1;
-    typeac(1,k)= aircraft_type();
-    end
-end
+% for i = 1:time
+%     for k = 1:n1
+%     if i == sa1(1,k)
+%         sched(i,k) = 1;
+%         % sched(i,takum(1,1)+k) = 1;
+%     end
+%     ruteno(1,k) = 1;
+%     typeac(1,k)= aircraft_type();
+%     end
+% end
 
 for i = 1:time
     for k = 1:n2
@@ -186,25 +186,25 @@ end
 %     end
 % end
 
-% for i = 1:time
-%     for k = 1:n7
-%     if i == sa7(1,k)
-%         sched(i,takum(1,6)+k) = 1;
-%     end
-%     ruteno(i,takum(1,6)+k) = 7;
-%     typeac(i,takum(1,6)+k)= aircraft_type();
-%     end
-% end
+for i = 1:time
+    for k = 1:n7
+    if i == sa7(1,k)
+        sched(i,takum(1,5)+k) = 1;
+    end
+    ruteno(i,takum(1,5)+k) = 7;
+    typeac(i,takum(1,5)+k)= aircraft_type();
+    end
+end
 % 
-% for i = 1:time
-%     for k = 1:n8
-%     if i == sa8(1,k)
-%         sched(i,takum(1,7)+k) = 1;
-%     end
-%     ruteno(i,takum(1,7)+k) = 8;
-%     typeac(i,takum(1,7)+k)= aircraft_type();
-%     end
-% end
+for i = 1:time
+    for k = 1:n8
+    if i == sa8(1,k)
+        sched(i,takum(1,6)+k) = 1;
+    end
+    ruteno(i,takum(1,6)+k) = 8;
+    typeac(i,takum(1,6)+k)= aircraft_type();
+    end
+end
 % 
 % for i = 1:time
 %     for k = 1:n9

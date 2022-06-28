@@ -1,8 +1,8 @@
-function[sa]=jadwal(time)
+function[sa]=jadwal1(time)
 % N = randi([1 2]);
 %sa = zeros(1,N);
 % N=randi([1 2]);
-N=8;
+N=4;
 k=randi([1 2]);    
 
 for iii=1:N

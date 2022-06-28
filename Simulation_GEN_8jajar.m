@@ -14,7 +14,7 @@ global lim_low lim_up lim_vel sen_descent sen_climb
 lim_low = meter(3500);   % lower limit
 lim_up = meter(15000);  % upper limit
 lim_vel = 82;           % limit lower velocity
-sen_descent = 7;        % sensitivitas sensor to desc  ent
+sen_descent = 0.7;        % sensitivitas sensor to desc  ent
 sen_climb = 0.7;        % sensitivitas sensor to climb
 t=time;
 d=2;
@@ -84,7 +84,7 @@ for i = 1:time
                 else
                     Distance_XY{1,i}(c1,c2) = sqrt((Sim1{1,i}(2,c1) - Sim1{1,i}(2,c2)).^2 + (Sim1{1,i}(3,c1) - Sim1{1,i}(3,c2)).^2);
                     Distance_Altitude{1,i}(c1,c2) = sqrt((Sim1{1,i}(4,c1) - Sim1{1,i}(4,c2)).^2); %% Vertical distance
-                        if Sim1{1,i}(27,c1)~= Sim1{1,i}(27,c2)
+                        if (Sim1{1,i}(27,c1)~= Sim1{1,i}(27,c2)) && ((Sim1{1,i}(27,c1)==1 && Sim1{1,i}(27,c2) ==3)||(Sim1{1,i}(27,c2)==1 && Sim1{1,i}(27,c1) ==3))
                             Distance_Merg{1,i}(c1,c2) = abs(sqrt(Sim1{1,i}(2,c1).^2 + Sim1{1,i}(3,c1).^2) - sqrt(Sim1{1,i}(2,c2).^2 + Sim1{1,i}(3,c2).^2));
                         else
                             Distance_Merg{1,i}(c1,c2) = 0;
@@ -165,7 +165,7 @@ for i = 1:time
     for j = 1:airplane
  
         ROW{1,i}(1,j)= j;
-        ROW{1,i}(2,j)= Route{1,j}(Sim1{1,i}(1,j),1);
+       ROW{1,i}(2,j)= Route{1,j}(Sim1{1,i}(1,j),1);
         ROW{1,i}(3,j)= Route{1,j}(Sim1{1,i}(1,j),2);
         ROW{1,i}(4,j)= Sim1{1,i}(13,j);  
     end
@@ -200,6 +200,7 @@ for j = 1:airplane
 %===========================NEXT WAYPOINT==================================
 wptnext = 2500; %% Distance when change to next waypoint 
 
+
 if  Sim1{1,i}(13,j) < wptnext && Sim1{1,i}(1,j) ~= Sim1{1,i}(17,j) 
         Sim1{1,i+1}(1,j) = Sim1{1,i}(1,j) + 1;
     else 
@@ -226,7 +227,7 @@ end
         if Sim1{1,i}(1,j) < Sim1{1,i}(17,j)
             
         if  Sim1{1,i}(13,j) < wptnext && Sim1{1,i}(1,j)~= 1
-                Sim1{1,i+1}(4,j) = Route{1,j}(Sim1{1,i}(1,j),3);   
+                Sim1{1,i+1}(4,j) = Route{1,j}(Sim1{1,i}(1,j)+1,3);   
             else
                 Sim1{1,i+1}(4,j) = Sim1{1,i}(4,j) + Sim1{1,i}(14,j);              %Z
         end
@@ -281,7 +282,7 @@ if Sim1{1,i+1}(10,j) == 1 && (Sim1{1,i}(29,j) == 1 && COMCTR{1,i}(5,j)== 0)
         Sim1{1,i+1}(12,j) = Sim1{1,i+1}(11,j);   %Airplane Heading
       
 % Distance Measure        
-        Sim1{1,i+1}(13,j) = sqrt((Sim1{1,i+1}(5,j))^2+(Sim1{1,i+1}(6,j))^2+(Sim1{1,i+1}(7,j))^2);
+        Sim1{1,i+1}(13,j) = sqrt((Sim1{1,i+1}(5,j))^2+(Sim1{1,i+1}(6,j))^2);
 
 % Velocity XYZ
 if Sim1{1,i+1}(1,j) < Sim1{1,i}(17,j)        
@@ -382,7 +383,7 @@ Sim1{1,i+1}(23,j) = round(sqrt((Sim1{1,i+1}(21,j))^2 + (Sim1{1,i+1}(22,j))^2 +(S
         Sim1{1,i+1}(12,j) = Sim1{1,i+1}(11,j);
         end
 % Distance Measure        
-                Sim1{1,i+1}(13,j) = sqrt((Sim1{1,i+1}(5,j))^2+(Sim1{1,i+1}(6,j))^2+(Sim1{1,i+1}(7,j))^2);
+                Sim1{1,i+1}(13,j) = sqrt(Sim1{1,i+1}(5,j)^2+Sim1{1,i+1}(6,j)^2);
 % Total Waypoint        
     Sim1{1,i+1}(17,j) = Sim1{1,1}(17,j);  
     
@@ -422,6 +423,18 @@ else
   Sim1{1,i+1}(18,j) = 0;
 end
 
+if i+d > t+1
+    d=1;
+else
+    d=d;
+end
+
+if i==1
+    d=1;
+else
+    d=d;
+end
+
 if Sim1{1,i+d}(4,j)- Sim1{1,i}(4,j)> tol_min && Sim1{1,i+d}(4,j)- Sim1{1,i}(4,j)< tol_max
     Sim1{1,i+1}(20,j) = 0; %Cruising
 elseif Sim1{1,i+d}(4,j)- Sim1{1,i}(4,j)>tol_max
@@ -433,7 +446,6 @@ end
 Sim1{1,i+1}(21,j) = Sim1{1,i+1}(15,j)+ Vw*sind(tetaw+180);
 Sim1{1,i+1}(22,j) = Sim1{1,i+1}(16,j)+ Vw*cosd(tetaw+180);
 Sim1{1,i+1}(23,j) = round(sqrt((Sim1{1,i+1}(21,j))^2 + (Sim1{1,i+1}(22,j))^2 +(Sim1{1,i+1}(14,j))^2));
-
 
 elseif Sim1{1,i+1}(10,j) == 4 && (Sim1{1,i}(29,j) == 1 && COMCTR{1,i}(5,j)== 0) 
 
@@ -503,7 +515,7 @@ else
         %Airplane Heading
       
 % Distance Measure        
-        Sim1{1,i+1}(13,j) = sqrt((Sim1{1,i+1}(5,j))^2+(Sim1{1,i+1}(6,j))^2+(Sim1{1,i+1}(7,j))^2);
+        Sim1{1,i+1}(13,j) = sqrt(Sim1{1,i+1}(5,j)^2+Sim1{1,i+1}(6,j)^2);
 
 % Total Waypoint        
         Sim1{1,i+1}(17,j) = Sim1{1,1}(17,j);  
@@ -581,7 +593,7 @@ end
 
  %% Lower East Controller %%% 
  %% Conflict proportion
-if Sim1{1,i+1}(29,j)== 1 && Sim1{1,i+1}(9,j)== 0 
+if Sim1{1,i+1}(29,j)== 1 && Sim1{1,i+1}(9,j)== 0 && Sim1{1,i+1}(31,j)==1
     con_prop{1,i+1}(1,j)= 1; %% Bip in radar because of potential conflict 
 else
     con_prop{1,i+1}(1,j)= 0;
@@ -621,11 +633,11 @@ else
 end
 
  
-tcin = 16;% Communication time for coordination in sec
-tcout = 14; % Communication time for coordination out sector
-tcid = 12; % Communication time for radar identification 
-tcvec = 16; % Communication time for radar vectoring 
-tccon = 15; % Communication time for control conflict
+tcin   = 16;% Communication time for coordination in sec
+tcout  = 14; % Communication time for coordination out sector
+tcid   = 12; % Communication time for radar identification 
+tcvec  = 16; % Communication time for radar vectoring 
+tccon  = 15; % Communication time for control conflict
 tccros = 70; % Workload for crossing conflict
 
 if i==1
@@ -853,6 +865,16 @@ conflict_prop2 = mean(con_proport(1,:)); % Bip porportion - average
 % Cor_wkld1 = corrcoef(bbc,bbd);
 % correlat1 = Cor_wkld1(2,1);% Correlation level workload-complexity
 
+[o,p]=find(complex(1,:)==max_aircraftinsector);
+[k1,k2]= size(p);
+min_con=zeros(1,k2);
+for iv = 1:k2
+    min_con(1,iv)=con_proport(1,p(1,iv));
+end
+
+minim_con = min(min_con);
+maksi_con = max(min_con);
+mean_con = mean(min_con);
 
 %   save('Result1.mat','NavData','Sim1','Conflict','Conflict_1','Conflict_2','-v7.3')
     %save('Result1.mat','NavData','Sim1')

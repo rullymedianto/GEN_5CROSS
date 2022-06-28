@@ -1,23 +1,36 @@
  %profile on 
 tic
-numb = 1000 ;
+numb= 10 ;
 
+rekam = cell(numb,6);
 compl1 = cell(numb,10);
 compl2 = cell(numb,7);
 compl3 = cell(numb,6);
 compl4 = cell(numb,6);
 compl5 = cell(numb,3);
 
-tugas1 = cell(numb,7);
+tugas1 = cell(numb,8);
+conflicta_min =cell(numb,4);
 
 n=0;
 for ii=1:numb
-    schedules_ok
-    Simulation_GEN_5cross %Simulation
+    clearvars sched Sim1 
+    
+    schedules_ok40
+    Simulation_GEN_8jajar %Simulation
 % for iii=1:10    
 %     Vector_Complexity
 %     No_conflict_plot% Calculate Complexity
    
+%% Rekam Jadwal
+rekam{ii,1}= sa1;
+rekam{ii,2}= sa2;
+rekam{ii,3}= sa3;
+rekam{ii,4}= sa4;
+rekam{ii,5}= sa5;
+% rekam{ii,6}= sa6;
+rekam{ii,6}= sa7;
+
 %% Lower Wast
     compl1{ii,1}= max_complexity;
     compl1{ii,2}= mean_complexity;
@@ -59,19 +72,43 @@ tugas1{ii,4}=mean_time; %waktu selama di sektor dalam menit
 tugas1{ii,5}= conflict_prop1; %conflict proportion by time
 tugas1{ii,6}= conflict_prop2; %Average conflict proportion  
 
-compl_total=[tugas1 compl1 compl2 compl3 compl4 compl5];
+
+conflicta_min{ii,1}= minim_con; 
+conflicta_min{ii,2}= maksi_con; 
+conflicta_min{ii,3}= mean_con; 
+
+compl_total=[tugas1 conflicta_min compl1 compl2 compl3 compl4 compl5 rekam];
+
+TT=[tugas1 conflicta_min rekam];
+
+ 
 
 %save('Complexity_Total.mat','compl_total','-v7.3')
-% writecell(compl_total,'7200-4min_00-00-100_2-3bde.xls')
-% writecell(tugas1,'tugas1_7200_00-100-00_2-3bde.xls')
+% writecell(compl_total,'cari_001_30C.xls')
+% writecell(TT,'Tugas_cari_001_30C.xls')
+
 
 % end   
 % end
 n=n+1;
 disp(n)
 end
+% T = cell2table(compl_total);
+% writetable(T,'3600-00-00-100-3ab.csv')
+% [m1,n1]= size(TT);
 T = cell2table(compl_total);
-writetable(T,'3600-00-00-100-3ab.csv')
-time_running = toc;
-time_running = time_running/60;
+writetable(T,'Cari_8Jajar_001_1_40_ppppov.csv')
+
+TS = cell2table(TT);
+writetable(TS,'Tugas_Cari8jajar_001_1_40_ppppov.csv')
+
+CONFL = cell2table(conflicta_min);
+writetable(CONFL,'Conflict_Cari8jajar_001_1_40_ppppov.csv')
+% for iv = 1:m1
+%     if 6.5 < TT(m1,2)< 7,5
+%        masuk(m1,:)= TT(m1,:);
+%        
+
+% time_running = toc;
+% time_running = time_running/60;
 %profsave

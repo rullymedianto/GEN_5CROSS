@@ -40,34 +40,41 @@ column1 = find(it_2(1,:) == j);
 
 if conflict(1,j) == 0 && conflict3(1,j)==0
     y = 1;
+
     
 elseif conflict(1,j) == 1 || conflict3(1,j)==1
     if column1 == 1
        y = 1;
+  
 
     else
        k = it_2(1,column1-1);
        if it_2(2,column1-1) == 0 && distance(j,k) > buffer_zone && distancemerg (j,k)> buffer_zone 
            y = 1;
+          
        elseif it_2(2,column1-1) == 1 && distance(j,k) > buffer_zone && distancemerg (j,k)> buffer_zone
            y = 1;
+           
        elseif it_2(2,column1-1) == 0 && distance(j,k) < buffer_zone && distancemerg (j,k)< buffer_zone
            y = 1;
+         
        elseif it_2(2,column1-1) == 1 && distance(j,k) < buffer_zone %%Revisi di sini
            y = 0;
-       elseif it_2(2,column1-1) == 1 && distancemerg (j,k)< buffer_zone
+           
+       elseif it_2(2,column1-1) == 1 && distancemerg (j,k)< buffer_zone % && distancemerg (j,k)~= 0
            y = 0;
            crossing = 1;
        else
            y= 1;
+          
        end
     end
 end
 
-if y == 1 && hold_status == 1
-    y==0;
-else
-    y==1;
-end
+% if y == 1 && hold_status == 1
+%     y==0;
+% else
+%     y==1;
+% end
 
 end

@@ -1,4 +1,4 @@
-function[sa]=jadwal(time)
+function[sa]=jadwal2(time)
 % N = randi([1 2]);
 %sa = zeros(1,N);
 % N=randi([1 2]);
