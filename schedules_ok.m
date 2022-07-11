@@ -5,12 +5,12 @@ load('NavData_8jajar.mat')
 load('NavAIP_8jajar.mat')
 load('Label_8jajar.mat')
 
-time= 3000; %
+time= 3600; %
 temp1=5;
 lat_RADAR = -25118.4; %Koordinat X RADAR
 lon_RADAR = -71138.2; %Koordinat Y RADAR
-Vw = 6;   % Besar kecepatan angin
-tetaw = 210; %sudut arah angin (dari)
+Vw = 6;               % Besar kecepatan angin
+tetaw = 210;           %sudut arah angin (dari)
 
 separation_length = nm(12);                      %%Manual Input
 %Separation_Angle = [270 335 28 432 393 494 250 250 250 250 250 250 250 250 250 250 250]; 
@@ -31,10 +31,10 @@ Sim2 = cell(1,time);
 % sa3=[1 200];
 % sa4=[1 200];
 sa1=jadwal2(time);
-sa2=jadwal2(time);
-sa3=jadwal2(time);
-sa4=jadwal2(time);
-sa5=jadwal1(time);
+sa2=jadwal1(time);
+sa3=[0];
+sa4=[0];
+sa5=[1];
 % sa6=jadwal2(time);
 % sa7=jadwal(time);
 % sa8=jadwal2(time);
@@ -83,11 +83,36 @@ sa5=jadwal1(time);
 %jadwal = cell(1,temp1)
 % jadwal = {sa1 sa2 sa3};
 
+if sa1==0
+    n1=0;
+else
 [m1,n1]= size(sa1);
+end
+
+if sa2==0
+    n2=0;
+else
 [m2,n2]= size(sa2);
+end
+
+if sa3==0
+    n3=0;
+else
 [m3,n3]= size(sa3);
+end
+
+if sa4==0
+    n4=0;
+else
 [m4,n4]= size(sa4);
+end
+
+if sa5==0
+    n5=0;
+else
 [m5,n5]= size(sa5);
+end
+
 % [m6,n6]= size(sa6);
 % [m7,n7]= size(sa7);
 % [m8,n8]= size(sa8);
@@ -288,7 +313,7 @@ end
     InitialPos(2,1) = Route{1,1}(1,2);%+ (separation_length + (nm(30)-separation_length)*rand(1,1))*cosd(Separation_Angle(1,1)); %Y
     InitialPos(3,1) = Route{1,1}(1,3); %Altitude;
     
-    for i=2:n2
+    for i=2:n1
     InitialPos(1,i) = InitialPos(1,i-1);%+ (separation_length + (nm(30)-separation_length)*rand(1,1))*sind(Separation_Angle(1,1)); %X    
     InitialPos(2,i) = InitialPos(2,i-1);%+ (separation_length + (nm(30)-separation_length)*rand(1,1))*cosd(Separation_Angle(1,1)); %Y
     InitialPos(3,i) = InitialPos(3,i-1); %Altitude;
@@ -307,6 +332,20 @@ end
     InitialPos(3,takum(1,k)+i) = InitialPos(3,takum(1,k)+i-1); %Altitude;
     end
     end
+    
+%     for k=1:(temp1-1)
+%         
+%     InitialPos(1,takum(1,k)+1) = Route{1,takum(1,k)+1}(1,1);%+ (separation_length + (nm(2)-separation_length)*rand(1,1))*sind(Separation_Angle(1,k+1)); %X
+%     InitialPos(2,takum(1,k)+1) = Route{1,takum(1,k)+1}(1,2);%+ (separation_length + (nm(2)-separation_length)*rand(1,1))*cosd(Separation_Angle(1,k+1)); %Y
+%     InitialPos(3,takum(1,k)+1) = Route{1,takum(1,k)+1}(1,3); %Altitude;
+%     
+%     for i=2:airplane_input(1,k+1)
+%     
+%     InitialPos(1,takum(1,k)+i) = InitialPos(1,takum(1,k)+i-1);%+ (separation_length + (nm(2)-separation_length)*rand(1,1))*sind(Separation_Angle(1,k+1)); %X    
+%     InitialPos(2,takum(1,k)+i) = InitialPos(2,takum(1,k)+i-1);%+ (separation_length + (nm(2)-separation_length)*rand(1,1))*cosd(Separation_Angle(1,k+1)); %Y
+%     InitialPos(3,takum(1,k)+i) = InitialPos(3,takum(1,k)+i-1); %Altitude;
+%     end
+%     end
     
        %% Initial ROW
 a = 1;
@@ -392,6 +431,7 @@ end
     Sim1{1,1}(29,i) = 0; % Sector Number
     Sim1{1,1}(30,i) = 0; % Status Conflict
     Sim1{1,1}(31,i) = 0; % Status Crossing Conflict
+    Sim1{1,1}(32,i) = 1; % Status potensi Conflict
     
                         if b == NavAIP{2,a}(1,1)
                             a = a+1;

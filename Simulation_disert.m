@@ -2,6 +2,7 @@
 %Simulation Time
 %time = 1200;
 tic
+% get_param('Simulation_disert.m','SimulationTime')
 Sim1 = cell(1,time);
 %% Import Data from PlaneGenerator
 % close all
@@ -14,12 +15,12 @@ global lim_low lim_up lim_vel sen_descent sen_climb
 lim_low = meter(3500);   % lower limit
 lim_up = meter(15000);  % upper limit
 lim_vel = 82;           % limit lower velocity
-sen_descent = 0.7;        % sensitivitas sensor to desc  ent
-sen_climb = 0.7;        % sensitivitas sensor to climb
+sen_descent = 2; %0.7;        % sensitivitas sensor to desc  ent
+sen_climb = 2; %0.7;        % sensitivitas sensor to climb
 t=time;
 d=2;
-tol_max = 0.5;
-tol_min = -0.5;
+tol_max = 2; %0.5;
+tol_min = -2; %-0.5;
 
 %% Global Variable    
 %% INPUT DESIRE SEPARATION
@@ -40,6 +41,7 @@ rate_climb   = mpersec(800);
 %Conflict Cell
 Conflict = cell(1,time);
 Conflict_0 = cell(1,time);
+
 Conflict_1 = cell(1,time);
 Conflict_2 = cell(1,time);
 Conflict_3 = cell(1,time);
@@ -52,12 +54,17 @@ ROW_Airplane = cell(1,time);
 Distance_XY_Plot = cell(1,time);
 Separation_Minimum = zeros(1,time);
 complex = zeros (1,time);
-con_prop = cell(1,time);
-con_proport= zeros(3,time);
+con_prop = zeros(6,time);
+con_proport= zeros(6,time);
 
-%Controller
-COMCTR = cell(1,time);
-COMCTR1 = zeros(1,time);
+%Controller Workload
+COMCTR = cell(1,time); %LN
+
+
+% COMCTR = cell(1,time);
+SLOTCTR= zeros(6,time);
+
+COMCTR1 = zeros(6,time);
 % slot = zeros(1,time);
 Timecheck = cell(1,time);
 TimeAVG = zeros(2,airplane);
@@ -66,10 +73,22 @@ TimeAVG = zeros(2,airplane);
 speed_changes = 0.5;
 deviation_angle = 15;
 
-csac = zeros(1,time);
+csac= zeros(1,time);
+
+
+% h = figure;
+% set(h , 'Units' , 'Normalized' , 'position' , [0.4 0.4 0.2 0.2]);
+% h1 = uicontrol(h , 'style' , 'text' , 'Units' , 'Normalized'...
+%                , 'position' , [0.4 0.4 0.2 0.2] , 'string' , 'Output','FontSize',20);
+
 
 %%  Simulation
 for i = 1:time
+    
+%  set(h1 , 'string' , num2str(i));
+%    pause(0.5)
+%    drawnow;    
+
 %     if i==1
 %         csac(1,i) = 0;
 %     end
@@ -82,7 +101,7 @@ for i = 1:time
                     Distance_Altitude{1,i}(c1,c2) = 0;
                     Distance_Merg{1,i}(c1,c2) = 0;
                 else
-                    [Distance_XY{1,i}(c1,c2),Distance_Altitude{1,i}(c1,c2),Distance_Merg{1,i}(c1,c2)] = separasi(Sim1{1,i}(2,c1),Sim1{1,i}(2,c2),Sim1{1,i}(3,c1),Sim1{1,i}(3,c2),Sim1{1,i}(4,c1),Sim1{1,i}(4,c2),Sim1{1,i}(27,c1),Sim1{1,i}(27,c2),Sim1{1,i}(1,c1),Sim1{1,i}(1,c2));
+                  [Distance_XY{1,i}(c1,c2),Distance_Altitude{1,i}(c1,c2),Distance_Merg{1,i}(c1,c2)] = separasi(Sim1{1,i}(2,c1),Sim1{1,i}(2,c2),Sim1{1,i}(3,c1),Sim1{1,i}(3,c2),Sim1{1,i}(4,c1),Sim1{1,i}(4,c2),Sim1{1,i}(27,c1),Sim1{1,i}(27,c2),Sim1{1,i}(1,c1),Sim1{1,i}(1,c2));
                 end
 
  %% For Radius 10NM-75NM
@@ -192,7 +211,7 @@ for j = 1:airplane
 %for k = 1:LD
     
 %===========================NEXT WAYPOINT==================================
-wptnext = 2500; %% Distance when change to next waypoint 
+wptnext = 1500; %% Distance when change to next waypoint 
 
 
 if  Sim1{1,i}(13,j) < wptnext && Sim1{1,i}(1,j) ~= Sim1{1,i}(17,j) 
@@ -237,8 +256,12 @@ end
                   
         Sim1{1,i+1}(5,j) = Route{1,j}(Sim1{1,i+1}(1,j),1) - Sim1{1,i+1}(2,j);    %Delta x
         Sim1{1,i+1}(6,j) = Route{1,j}(Sim1{1,i+1}(1,j),2) - Sim1{1,i+1}(3,j);    %Delta y
+        
+        if Route{1,j}(Sim1{1,i+1}(1,j),3) - Sim1{1,i+1}(4,j)==0
+            Sim1{1,i+1}(7,j) = 0.1;
+        else
         Sim1{1,i+1}(7,j) = Route{1,j}(Sim1{1,i+1}(1,j),3) - Sim1{1,i+1}(4,j);    %Delta z
-
+        end
 %ROW
         Sim1{1,i+1}(8,j) = ROW_Airplane{1,i}(2,j); 
         % ROW : Number (1,2,3,...., n)
@@ -268,7 +291,7 @@ else
     d=d;
 end
 
-if Sim1{1,i+1}(10,j) == 1 && (Sim1{1,i}(29,j) == 1 && COMCTR{1,i}(5,j)== 0) 
+if Sim1{1,i+1}(10,j) == 1 && Sim1{1,i}(29,j) == 1 %&& COMCTR{1,i}(5,j)== 0) 
 %% Altitude Resolution
 
 % Heading & Relative Heading
@@ -311,7 +334,7 @@ Sim1{1,i+1}(21,j) = Sim1{1,i+1}(15,j)+ Vw*sind(tetaw+180);
 Sim1{1,i+1}(22,j) = Sim1{1,i+1}(16,j)+ Vw*cosd(tetaw+180);
 Sim1{1,i+1}(23,j) = round(sqrt((Sim1{1,i+1}(21,j))^2 + (Sim1{1,i+1}(22,j))^2 +(Sim1{1,i+1}(14,j))^2));
 
-     elseif Sim1{1,i+1}(10,j) == 2 && (Sim1{1,i}(29,j) == 1 && COMCTR{1,i}(5,j)== 0)
+     elseif Sim1{1,i+1}(10,j) == 2 && Sim1{1,i}(29,j) == 1 %&& COMCTR{1,i}(5,j)== 0)
 %% Vectoring Resolution
         % Heading & Relative Heading
                 Sim1{1,i+1}(11,j) = angle(Sim1{1,i+1}(5,j),Sim1{1,i+1}(6,j)); %Relative Airplane-Waypoint Course
@@ -367,7 +390,7 @@ Sim1{1,i+1}(21,j) = Sim1{1,i+1}(15,j)+ Vw*sind(tetaw+180);
 Sim1{1,i+1}(22,j) = Sim1{1,i+1}(16,j)+ Vw*cosd(tetaw+180);
 Sim1{1,i+1}(23,j) = round(sqrt((Sim1{1,i+1}(21,j))^2 + (Sim1{1,i+1}(22,j))^2 +(Sim1{1,i+1}(14,j))^2));
 
-     elseif Sim1{1,i+1}(10,j) == 3 && (Sim1{1,i}(29,j) == 1 && COMCTR{1,i}(5,j)== 0) 
+     elseif Sim1{1,i+1}(10,j) == 3 % && COMCTR{1,i}(5,j)== 0 %&& (Sim1{1,i}(29,j) == 1
 %% Speed Resolution
 
         Sim1{1,i+1}(11,j) = angle(Sim1{1,i+1}(5,j),Sim1{1,i+1}(6,j)); %Relative Airplane-Waypoint Course
@@ -392,16 +415,19 @@ end
 %Sim1{1,i+1}(14,j) = zspeed(Sim1{1,i+1}(4,j),Route{1,j}(Sim1{1,i+1}(1,j),3),mpersec(Route{1,j}(Sim1{1,i+1}(1,j),5)));  %Vz
    
                 
-    if  Sim1{1,i}(19,j)== 0
+    if Sim1{1,i}(19,j)== 0
        Sim1{1,i+1}(15,j)= 0;
        Sim1{1,i+1}(16,j)= 0;
-   else
-if Sim1{1,i+1}(1,j) < Sim1{1,i+1}(17,j)
+    else
         
-        [Sim1{1,i+1}(15,j), Sim1{1,i+1}(16,j)] = speed_changes2( Sim1{1,i+1}(14,j),mps(Route{1,j}(Sim1{1,i+1}(1,j)+1,4)),Sim1{1,i}(19,j),Sim1{1,i+1}(12,j),Sim1{1,i+1}(8,j));
+        if Sim1{1,i+1}(1,j) < Sim1{1,i+1}(17,j)
+%             if Sim1{1,i+1}(1,j) == 1
+                
+        
+        [Sim1{1,i+1}(15,j), Sim1{1,i+1}(16,j)] = speed_changes2(Sim1{1,i+1}(14,j),mps(Route{1,j}(Sim1{1,i+1}(1,j)+1,4)),Sim1{1,i}(19,j),Sim1{1,i+1}(12,j),Sim1{1,i+1}(8,j));
          
 else
-        [Sim1{1,i+1}(15,j), Sim1{1,i+1}(16,j)] = speed_changes2( Sim1{1,i+1}(14,j),mps(Route{1,j}(Sim1{1,i+1}(1,j),4)),Sim1{1,i}(19,j),Sim1{1,i+1}(12,j),Sim1{1,i+1}(8,j));
+        [Sim1{1,i+1}(15,j), Sim1{1,i+1}(16,j)] = speed_changes2(Sim1{1,i+1}(14,j),mps(Route{1,j}(Sim1{1,i+1}(1,j),4)),Sim1{1,i}(19,j),Sim1{1,i+1}(12,j),Sim1{1,i+1}(8,j));
          
  end
    end            
@@ -441,7 +467,7 @@ Sim1{1,i+1}(21,j) = Sim1{1,i+1}(15,j)+ Vw*sind(tetaw+180);
 Sim1{1,i+1}(22,j) = Sim1{1,i+1}(16,j)+ Vw*cosd(tetaw+180);
 Sim1{1,i+1}(23,j) = round(sqrt((Sim1{1,i+1}(21,j))^2 + (Sim1{1,i+1}(22,j))^2 +(Sim1{1,i+1}(14,j))^2));
 
-elseif Sim1{1,i+1}(10,j) == 4 && (Sim1{1,i}(29,j) == 1 && COMCTR{1,i}(5,j)== 0) 
+elseif Sim1{1,i+1}(10,j) == 4 && Sim1{1,i}(29,j) == 1 %&& COMCTR{1,i}(5,j)== 0) 
 
     %% Holding
 % Heading & Relative Heading
@@ -572,133 +598,56 @@ end
             % 0 : No LOS
             % 1 : LOS
  
-   Sim1{1,i+1}(25,j)= 0; %holding_point(Sim1{1,i+1}(1,j),Sim2{1,i+1}(1,j));
-   Sim1{1,i+1}(26,j)= sqrt((lon_RADAR-Sim1{1,i+1}(2,j))^2 + (lat_RADAR - Sim1{1,i+1}(3,j))^2); %Radius dari Radar
+   Sim1{1,i+1}(25,j) = 0; %holding_point(Sim1{1,i+1}(1,j),Sim2{1,i+1}(1,j));
+   Sim1{1,i+1}(26,j) = sqrt((lon_RADAR-Sim1{1,i+1}(2,j))^2 + (lat_RADAR - Sim1{1,i+1}(3,j))^2); %Radius dari Radar
    Sim1{1,i+1}(27,j) = Sim1{1,i}(27,j) ;
    Sim1{1,i+1}(28,j) = Sim1{1,i}(28,j);
    Sim1{1,i+1}(29,j) = sector(Sim1{1,i+1}(1,j),Sim1{1,i+1}(4,j),Sim1{1,i+1}(27,j)); % Sector Number
    Sim1{1,i+1}(30,j) = clearance(ROW_Detail{1,i},Conflict_1{1,i},airplane,j,Distance_XY{1,i},conflict_separation_1,conflict_separation_2,Sim1{1,i+1}(4,j),Holding_status{1,i}(1,j),Conflict_3{1,i},Distance_Merg{1,i}); %Status Conflict
- 
+   Sim1{1,i+1}(32,j) = clearance(ROW_Detail{1,i},Conflict_1{1,i},airplane,j,Distance_XY{1,i},buffer_zone_1,buffer_zone_2,Sim1{1,i+1}(4,j),Holding_status{1,i}(1,j),Conflict_3{1,i},Distance_Merg{1,i}); %Status Potential Conflict
 
 if i==1
     COMCTR{1,i}(1:5,j)= 0;
-    COMCTR1(1,i)= 0;
+    COMCTR1(1:12,i)= 0;
+    SLOTCTR(1:6,i)= 0;
 end
 
  %% Lower East Controller %%% 
  %% Conflict proportion
-if Sim1{1,i+1}(29,j)== 1 && Sim1{1,i+1}(9,j)== 0 && Sim1{1,i+1}(31,j)==1
-    con_prop{1,i+1}(1,j)= 1; %% Bip in radar because of potential conflict 
-else
-    con_prop{1,i+1}(1,j)= 0;
-end
+% if Sim1{1,i+1}(29,j)== 1 && Sim1{1,i+1}(9,j)== 0 
+%     con_prop{1,i+1}(1,j)= 1; %% Bip in radar because of potential conflict 
+% else
+%     con_prop{1,i+1}(1,j)= 0;
+% end
 
-if sum(nonzeros(Sim1{1,i+1}(29,:)))>0
-con_proport(1,i+1)= sum(nonzeros(con_prop{1,i+1}(1,:)))/sum(nonzeros(Sim1{1,i+1}(29,:))); %% BIP proportion
-else
-con_proport(1,i+1)=0;
-end
-con_proport(2,i+1)=sum(con_prop{1,i+1}(1,:));
-con_proport(3,i+1)= sum(Sim1{1,i+1}(29,:));
+[con_prop(1,i+1),con_prop(2,i+1),con_prop(3,i+1),con_prop(4,i+1),con_prop(5,i+1),con_prop(6,i+1)] = conflict_BIP(Sim1{1,i+1}(29,:),Sim1{1,i+1}(9,:));
+
+[con_proport(1,i+1),con_proport(2,i+1),con_proport(3,i+1),con_proport(4,i+1),con_proport(5,i+1),con_proport(6,i+1)] = conflict_prop(Sim1{1,i+1}(29,:),Sim1{1,i+1}(9,:));
  
 %% Communication Workload 
-if (Sim1{1,i}(29,j)== 0 && Sim1{1,i+1}(29,j)== 1) %|| COMCTR{1,i}(1,j)== 1 
-   COMCTR{1,i+1}(1,j)= 1; % Enter sector  Check
-else
-   COMCTR{1,i+1}(1,j)= 0;
-end
 
-if (Sim1{1,i}(29,j)== 1 && Sim1{1,i+1}(29,j)== 0) 
-   COMCTR{1,i+1}(2,j)= 1; % Exit sector  Check
-else
-   COMCTR{1,i+1}(2,j)= 0;
-end
- 
-if (Sim1{1,i}(9,j)== 1 && Sim1{1,i+1}(9,j)== 0 && Sim1{1,i+1}(29,j)== 1 && Sim1{1,i+1}(10,j) == 2) || (Sim1{1,i}(10,j)== 2 && Sim1{1,i+1}(29,j)== 1 && Sim1{1,i+1}(10,j) == 0)
-   COMCTR{1,i+1}(3,j)= 1; % Radar vector
-else
-   COMCTR{1,i+1}(3,j)= 0;
-end
-
-if Sim1{1,i}(9,j)== 1 && Sim1{1,i+1}(9,j)== 0 && Sim1{1,i+1}(29,j)== 1 && Sim1{1,i+1}(10,j)~= 2 && Sim1{1,i+1}(10,j)~= 0
-   COMCTR{1,i+1}(4,j)= 1; % Control conflict
-else
-   COMCTR{1,i+1}(4,j)= 0;
-end
-
- 
-tcin   = 16;% Communication time for coordination in sec
-tcout  = 14; % Communication time for coordination out sector
-tcid   = 12; % Communication time for radar identification 
-tcvec  = 16; % Communication time for radar vectoring 
-tccon  = 15; % Communication time for control conflict
-tccros = 70; % Workload for crossing conflict
-
-if i==1
-    tcom1=0;
-end
-
-
- %% Communication Time Lower North%%% 
- 
- if COMCTR{1,i+1}(1,j)== 1 
-    if COMCTR{1,i}(5,j)== 0
-   tcom1 = tcin; %time comm in
-   COMCTR{1,i+1}(5,j)= 1;
-   %COMCTR{1,i+1}(1,j)= 0;
-    else
-        COMCTR{1,i+1}(1,j)= 1;
-        COMCTR{1,i+1}(5,j)= 1;
-    end
-    
-elseif COMCTR{1,i+1}(2,j)== 1 
-    if COMCTR{1,i}(5,j)== 0
-    tcom1 = tcout; %time comm out
-    COMCTR{1,i+1}(5,j)= 1;
-    %COMCTR{1,i+1}(2,j)= 0;
-    else
-        COMCTR{1,i+1}(2,j)= 1;
-        COMCTR{1,i+1}(5,j)= 1;
-    end
-          
-elseif COMCTR{1,i+1}(3,j)== 1 
-    if COMCTR{1,i}(5,j)== 0 && Sim1{1,i}(31,j)==0
-    tcom1 = tcvec; %time vectoring
-    COMCTR{1,i+1}(5,j)= 1;
-    elseif COMCTR{1,i}(5,j)== 0 && Sim1{1,i}(31,j)==1
-    tcom1 = tccros; %time crossing
-    COMCTR{1,i+1}(5,j)= 1;
-    %COMCTR{1,i+1}(3,j)= 0;
-    else
-        COMCTR{1,i+1}(3,j)= 1 ;
-        COMCTR{1,i+1}(5,j)= 1;
-    end
-    
-elseif COMCTR{1,i+1}(4,j)== 1 
-    if COMCTR{1,i}(5,j)== 0 && Sim1{1,i}(31,j)==0
-    tcom1 = tccon; %time resolution conflict
-    COMCTR{1,i+1}(5,j)= 1;
-    elseif COMCTR{1,i}(5,j)== 0 && Sim1{1,i}(31,j)==1
-    tcom1 = tccros; %time crossing
-    COMCTR{1,i+1}(5,j)= 1;
-    %COMCTR{1,i+1}(4,j)= 0;
-    else
-        COMCTR{1,i+1}(4,j)= 1 ;
-        COMCTR{1,i+1}(5,j)= 1;
-    end
+if i ==1
+    tcom_1=0;
+    tcom_2=0;
+    tcom_3=0;
+    tcom_4=0;
+    tcom_5=0;
+    tcom_6=0;
     
     
-elseif COMCTR{1,i}(5,j)== 1 && tcom1>0 
-    tcom1 = tcom1-1;
-    COMCTR{1,i+1}(5,j)= 1;
-else
-    COMCTR{1,i+1}(5,j)= 0;
 end
 
+%Task Event
+if Sim1{1,i+1}(29,j)== 1
+    [COMCTR{1,i+1}(1,j),COMCTR{1,i+1}(2,j),COMCTR{1,i+1}(3,j),COMCTR{1,i+1}(4,j),COMCTR{1,i+1}(5,j)]= com_wrkld_1(Sim1{1,i}(29,j),Sim1{1,i+1}(29,j),Sim1{1,i}(9,j),Sim1{1,i+1}(9,j),Sim1{1,i}(10,j),Sim1{1,i+1}(10,j),Sim1{1,i}(31,j));  %Communication Workload for Lower North 
+else
+    COMCTR{1,i+1}(1:5,j) = 0;
+end
 
-COMCTR1(1,i+1)= any(COMCTR{1,i+1}(5,:)+ con_prop{1,i+1}(1,:));
-COMCTR1(2,i+1)= any(COMCTR{1,i+1}(1,:)+COMCTR{1,i+1}(2,:)+COMCTR{1,i+1}(3,:)+COMCTR{1,i+1}(4,:)+ con_prop{1,i+1}(1,:));
+%Slot Time Controller
+SLOTCTR(1,i+1)= slot_time(SLOTCTR(1,i),COMCTR{1,i+1}(1,:),COMCTR{1,i+1}(2,:),COMCTR{1,i+1}(3,:),COMCTR{1,i+1}(4,:),COMCTR{1,i+1}(5,:));
 
+COMCTR1(1,i+1)= any(COMCTR{1,i+1}(5,:))+ con_prop(1,i);
 
 %% Complexity Weighting Factor
 
@@ -725,8 +674,9 @@ complex(4,i) = vector_descent(Sim1{1,i}(1,:),Sim1{1,i}(20,:),Sim1{1,i}(29,:));
 complex(5,i) = vector_climb(Sim1{1,i}(1,:),Sim1{1,i}(20,:),Sim1{1,i}(29,:));
 complex(6,i) = number_of_conflict(Sim1{1,i}(1,:),Sim1{1,i}(30,:),Sim1{1,i}(29,:));
 
-tw = 60;
-tc = 30;
+
+tw = 60; %rentang penghitungan communication workload
+tc = 30; %rentang penghitungan complexity level
 
 if i < tw+1
     complex(7,i) = 0;
@@ -735,7 +685,8 @@ complex(7,i) = vector_comunication(COMCTR1(1,i-tw:i));
 %complex(7,i) = vector_comunication(COMCTR1(2,i-60:i))/th_com;
 end
 
-complex(8,i) = w1*complex(1,i)/th_acin+ w2*complex(2,i)/th_actp+ w3*complex(3,i)/th_spd+ w4*complex(4,i)/th_des + w5*complex(5,i)/th_clm + w6*complex(6,i)/th_con; %+ w7*complex(7,i)/th_com;
+complex(8,i) = w1*complex(1,i)/th_acin + w2*complex(2,i)/th_actp+ w3*complex(3,i)/th_spd+ w4*complex(4,i)/th_des + w5*complex(5,i)/th_clm + w6*complex(6,i)/th_con; %+ w7*complex_1(7,i)/th_com;
+
 
 if i < tc+1
     complex(9,i) = 0;
@@ -743,61 +694,23 @@ else
     complex(9,i) = complexity_minute(complex(8,i-tc:i));
 end
 
+complex(10,i) = number_of_conflict(Sim1{1,i}(1,:),Sim1{1,i}(32,:),Sim1{1,i}(29,:));%potensi conflict
+
 %% Time check
 if i == 1
-    Timecheck{1,i}(1,j) = 0;
-    Timecheck{1,i}(2,j) = 0;
-    Timecheck{1,i}(3,j) = 0;
-    con_prop{1,i}(1,j) = 0;
-   con_proport(1,i) = 0;
+    Timecheck{1,i}(1:3,j) = 0;
 end
 
-if COMCTR{1,i+1}(1,j)== 1
-Timecheck{1,i+1}(1,j) = i;%Time Enter Sector
-else
-Timecheck{1,i+1}(1,j) = Timecheck{1,i}(1,j); 
-end
-
-if COMCTR{1,i+1}(2,j)== 1
-Timecheck{1,i+1}(2,j) = i;% Time Exit Sector
-else
-Timecheck{1,i+1}(2,j) = Timecheck{1,i}(2,j);
-end
-
-if Timecheck{1,i+1}(2,j)> Timecheck{1,i+1}(1,j)
-Timecheck{1,i+1}(3,j) = Timecheck{1,i+1}(2,j)- Timecheck{1,i+1}(1,j);% Time in Sector
-else
-Timecheck{1,i+1}(3,j) = 0;
-end
-
-if Timecheck{1,i+1}(3,j)>0
-TimeAVG(1,j)= Timecheck{1,i+1}(3,j);
-else
-TimeAVG(1,j)= Timecheck{1,i}(3,j);
-end
-
-if COMCTR{1,i+1}(1,j)== 1
-TimeAVG(2,j)= 1;
-else
-TimeAVG(2,j)= TimeAVG(2,j);
-end
-
-%% Conflict proportion
-% if Sim1{1,i+1}(29,j)== 1 && Sim1{1,i}(30,j)== 1
-%     con_prop{1,i+1}(1,j)= 1;
-% else
-%     con_prop{1,i+1}(1,j)= 0;
-% end
+[Timecheck{1,i+1}(1,j),Timecheck{1,i+1}(2,j),Timecheck{1,i+1}(3,j)] = time_checking(i,COMCTR{1,i+1}(1,j),COMCTR{1,i+1}(2,j),Timecheck{1,i}(1,j),Timecheck{1,i}(2,j));
 % 
-% if sum(nonzeros(Sim1{1,i+1}(29,:)))>0
-% con_proport(1,i+1)= sum(nonzeros(con_prop{1,i+1}(1,:)))/sum(nonzeros(Sim1{1,i+1}(29,:))); 
-% else
-% con_proport(1,i+1)=0;
-% end
+TimeAVG(1,j) = time_average(Timecheck{1,i+1}(3,j),Timecheck{1,i}(3,j));
 
 csac(1,i+1) = com2sac(complex(7,i)); %Comm Workload torespon delay
 csac(2,i+1) = com2sac_pp(complex(7,i));  %Comm workload level
 csac(3,i+1) = com2pcg(complex(8,i)); %Complexity level
+
+% Time_running=i;
+% fprintf('%d\n',Time_running);
 end
 end
 

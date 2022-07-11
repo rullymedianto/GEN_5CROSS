@@ -124,7 +124,7 @@ hold on;
         %delete (txt1);
         delete (txt2);
         delete (txt2a);
-        delete (txt2b);
+%         delete (txt2b);
 %         delete(plotseparation);
 %         delete(plotcapacity);
 % R= nm(75);

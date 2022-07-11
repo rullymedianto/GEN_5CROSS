@@ -6,7 +6,7 @@ N=4;
 k=randi([1 2]);    
 
 for iii=1:N
-    k=k+(20*(randi([2 6])));
+    k=k+(20*(randi([10 20])));
     sa(1,iii)=k;
     if k>time
         return

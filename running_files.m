@@ -1,6 +1,6 @@
  %profile on 
 tic
-numb= 10 ;
+numb= 500 ;
 
 rekam = cell(numb,6);
 compl1 = cell(numb,10);
@@ -16,7 +16,7 @@ n=0;
 for ii=1:numb
     clearvars sched Sim1 
     
-    schedules_ok40
+    schedules_ok
     Simulation_GEN_8jajar %Simulation
 % for iii=1:10    
 %     Vector_Complexity
@@ -29,7 +29,7 @@ rekam{ii,3}= sa3;
 rekam{ii,4}= sa4;
 rekam{ii,5}= sa5;
 % rekam{ii,6}= sa6;
-rekam{ii,6}= sa7;
+% rekam{ii,6}= sa7;
 
 %% Lower Wast
     compl1{ii,1}= max_complexity;
@@ -65,12 +65,13 @@ rekam{ii,6}= sa7;
     compl5{ii,1}=correlat;
     compl5{ii,2}=mean_time/60;
     
-tugas1{ii,1}=sec_demand; %aircraft demand per jam
-tugas1{ii,2}=AA1;% tinkat workload controller 
+tugas1{ii,1}= sec_demand; %aircraft demand per jam
+tugas1{ii,2}= AA1;% tingkat workload controller 
 tugas1{ii,3}= max_aircraftinsector; %TAC controller capacity aac/sector
-tugas1{ii,4}=mean_time; %waktu selama di sektor dalam menit
-tugas1{ii,5}= conflict_prop1; %conflict proportion by time
-tugas1{ii,6}= conflict_prop2; %Average conflict proportion  
+tugas1{ii,4}= mean_time; %waktu selama di sektor dalam menit
+tugas1{ii,5}= max_conflictinsector;
+tugas1{ii,6}= conflict_prop1; %conflict proportion by time
+tugas1{ii,7}= conflict_prop2; %Average conflict proportion  
 
 
 conflicta_min{ii,1}= minim_con; 
@@ -79,7 +80,7 @@ conflicta_min{ii,3}= mean_con;
 
 compl_total=[tugas1 conflicta_min compl1 compl2 compl3 compl4 compl5 rekam];
 
-TT=[tugas1 conflicta_min rekam];
+TT=[tugas1 conflicta_min];
 
  
 
@@ -97,13 +98,13 @@ end
 % writetable(T,'3600-00-00-100-3ab.csv')
 % [m1,n1]= size(TT);
 T = cell2table(compl_total);
-writetable(T,'Cari_8Jajar_001_1_40_ppppov.csv')
+writetable(T,'Cari_8Jajar_1-2B .csv')
 
 TS = cell2table(TT);
-writetable(TS,'Tugas_Cari8jajar_001_1_40_ppppov.csv')
+writetable(TS,'Tugas_Cari8jajar_1-2B.csv')
 
 CONFL = cell2table(conflicta_min);
-writetable(CONFL,'Conflict_Cari8jajar_001_1_40_ppppov.csv')
+writetable(CONFL,'Conflict_Cari8jajar_1-2B.csv')
 % for iv = 1:m1
 %     if 6.5 < TT(m1,2)< 7,5
 %        masuk(m1,:)= TT(m1,:);

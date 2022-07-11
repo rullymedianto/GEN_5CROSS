@@ -15,7 +15,7 @@ plot(A1,'r')
 
 
 % hold on
-% plot(CA2,'b')
+
 % plot(CA3,'g')
 % plot(CA4,'c')
 % plot(CA5,'y')
